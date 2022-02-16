@@ -10,7 +10,7 @@ from shutil import copyfile, rmtree
 
 from src.execution.execution_task import Execution_Task
 from src.logger import logs
-from src.utils import get_solc_version,COLERR,COLRESET
+from src.utils import get_solc_suitable_version,COLERR,COLRESET
 
 client = docker.from_env()
 
@@ -65,10 +65,6 @@ def tool_conf(tool: str):
         except yaml.YAMLError as exc:
             logs.print(exc)
 
-def tool_image(cfg, solc_version, is_bytecode = False):
-    if not is_bytecode and isinstance(solc_version, int) and solc_version < 5 and 'solc<5' in cfg['docker_image']:
-        return cfg['docker_image']['solc<5']
-    return cfg['docker_image']['default']
 
 def analyse_files(task: 'Execution_Task'):
     """
@@ -108,7 +104,7 @@ def analyse_files(task: 'Execution_Task'):
         # bind directory path instead of file path to allow imports in the same directory
         volume_bindings = mount_volumes(working_dir)
 
-        image = tool_image(cfg, get_solc_version(file) if not task.execution_configuration.is_bytecode else 5, is_bytecode=task.execution_configuration.is_bytecode)
+        image = cfg['docker_image']['default']
 
         cmd = cfg[cmd_key]
 
@@ -120,6 +116,7 @@ def analyse_files(task: 'Execution_Task'):
         try:
             container = client.containers.run(image,
                                               cmd,
+                                              environment=[f"SOLC_VERSION={get_solc_suitable_version(file)}"],
                                               detach=True,
                                               cpu_quota=task.execution_configuration.cpu_quota,
                                               mem_limit=task.execution_configuration.mem_limit,

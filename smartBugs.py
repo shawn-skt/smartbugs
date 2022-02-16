@@ -14,7 +14,7 @@ from src.execution.execution_configuration import Execution_Configuration
 from src.logger import logs
 from src.interface.cli import get_config, cfg_dataset, is_remote_info, get_remote_info
 from src.utils import COLSTATUS,COLRESET,COLERR
-from src.execution.docker_api import tool_conf, tool_image, pull_image
+from src.execution.docker_api import tool_conf, pull_image
 
 def create_tasks(conf: 'Execution_Configuration') -> List['Execution_Task']:
     files_to_analyze = []
@@ -100,12 +100,8 @@ if __name__ == '__main__':
     if tasks:
         for tool in conf.tools:
             cfg = tool_conf(tool)
-            image_soc5 = tool_image(cfg, solc_version=5, is_bytecode=conf.is_bytecode)
-            pull_image(image_soc5)
-
-            image_soc4 = tool_image(cfg, solc_version=4, is_bytecode=conf.is_bytecode)
-            if image_soc4 != image_soc5:
-                pull_image(image_soc4)
+            image = cfg['docker_image']['default']
+            pull_image(image)
 
         execution = Execution(tasks=tasks)
         execution.exec()
