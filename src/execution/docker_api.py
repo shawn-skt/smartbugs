@@ -113,10 +113,17 @@ def analyse_files(task: 'Execution_Task'):
         else:
             cmd += ' /data/' + os.path.basename(file)
         container = None
+
+        # set environment
+        if task.execution_configuration.is_bytecode:
+            env = []
+        else:
+            env = [f"SOLC_VERSION={get_solc_suitable_version(file)}"]
+
         try:
             container = client.containers.run(image,
                                               cmd,
-                                              environment=[f"SOLC_VERSION={get_solc_suitable_version(file)}"],
+                                              environment=env,
                                               detach=True,
                                               cpu_quota=task.execution_configuration.cpu_quota,
                                               mem_limit=task.execution_configuration.mem_limit,
