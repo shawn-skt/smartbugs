@@ -24,6 +24,21 @@ RUN git clone https://github.com/smartbugs/MAIAN
 # Checkout specific version of MAIAN's repository and install requirements
 RUN cd /MAIAN; git checkout 8bf16ac; pip3 install -r requirements-3.8.txt
 
+# Precompute ethash data
+RUN \
+  mkdir ~/.ethash; \
+  for block in 0 30000; do \
+    geth makedag $block ~/.ethash; \
+  done
+
+# Precompile program, test Maian installation
+RUN \
+  cd /MAIAN/tool; \
+  for c in 0 1 2; do \
+    python3 maian.py -bs example_contracts/example_suicidal.bytecode_source -c $c; \
+  done; \
+  rm -rf out/*
+
 # Script that extracts contract names 
 ENV LC_ALL C.UTF-8  
 RUN pip3 install solidity_parser
@@ -34,5 +49,3 @@ COPY scripts/run_maian_solidity.sh run_maian_solidity.sh
 COPY scripts/run_maian_bytecode.sh run_maian_bytecode.sh
 RUN chmod +x printContractNames.py run_maian_solidity.sh run_maian_bytecode.sh 
 
-# Allow insecure unlock
-#RUN sed -si "s/'geth'/'geth','--allow-insecure-unlock'/g" /MAIAN/tool/blockchain.py
