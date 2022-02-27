@@ -6,10 +6,11 @@ import sys
 import yaml
 import tempfile
 import requests
-from shutil import copyfile, rmtree
+import shutil
 
 from src.execution.execution_task import Execution_Task
 from src.logger import logs
+from src.tools import TOOLS
 from src.utils import get_solc_suitable_version,COLERR,COLRESET
 
 client = docker.from_env()
@@ -58,12 +59,7 @@ def remove_container(container):
         logs.print(err)
 
 def tool_conf(tool: str):
-    cfg_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config', 'tools', tool + '.yaml')
-    with open(cfg_path, 'r', encoding='utf-8') as ymlfile:
-        try:
-            return yaml.safe_load(ymlfile)
-        except yaml.YAMLError as exc:
-            logs.print(exc)
+    return TOOLS[tool]
 
 
 def analyse_files(task: 'Execution_Task'):
@@ -94,12 +90,10 @@ def analyse_files(task: 'Execution_Task'):
             logs.print(msg)
             sys.exit(msg)
 
-        file_name = os.path.basename(task.file)
-        file_name = os.path.splitext(file_name)[0]
-
+        contract_base = os.path.basename(task.file)
+        contract_name = os.path.splitext(contract_base)[0]
         working_dir = tempfile.mkdtemp()
-        copyfile(task.file, os.path.join(working_dir, os.path.basename(task.file)))
-        file = os.path.join(working_dir, os.path.basename(task.file))
+        working_file = shutil.copy(task.file, working_dir)
 
         # bind directory path instead of file path to allow imports in the same directory
         volume_bindings = mount_volumes(working_dir)
@@ -109,9 +103,9 @@ def analyse_files(task: 'Execution_Task'):
         cmd = cfg[cmd_key]
 
         if '{contract}' in cmd:
-            cmd = cmd.replace('{contract}', '/data/' + os.path.basename(file))
+            cmd = cmd.replace('{contract}', f'/data/{contract_base}')
         else:
-            cmd += ' /data/' + os.path.basename(file)
+            cmd += f' /data/{contract_base}'
         container = None
 
         # set environment
@@ -155,7 +149,7 @@ def analyse_files(task: 'Execution_Task'):
                     logs.print(f"{COLERR}{msg}{COLRESET}", msg)
             return output
         finally:
-            rmtree(working_dir)
+            shutil.rmtree(working_dir)
             stop_container(container)
             remove_container(container)
 
