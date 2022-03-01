@@ -28,7 +28,7 @@ RUN \
 RUN git clone https://github.com/smartbugs/MAIAN
 
 # Checkout specific version of MAIAN's repository and install requirements
-RUN cd /MAIAN; git checkout 1c92091; pip3 install -r requirements-3.8.txt
+RUN cd /MAIAN; git checkout 8803a30; pip3 install -r requirements-3.8.txt
 
 # Precompile program, test Maian installation
 RUN \
