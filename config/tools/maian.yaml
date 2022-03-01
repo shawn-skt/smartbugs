@@ -1,5 +1,5 @@
 docker_image:
-  default: smartbugs/maian:8803a30
+  default: smartbugs/maian:latest
 cmd: /run_maian_solidity.sh
 cmd_bytecode: /run_maian_bytecode.sh
 output_parser: Maian
