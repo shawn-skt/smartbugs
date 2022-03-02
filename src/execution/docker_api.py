@@ -112,7 +112,7 @@ def analyse_files(task: 'Execution_Task'):
         if task.execution_configuration.is_bytecode:
             env = []
         else:
-            env = [f"SOLC_VERSION={get_solc_suitable_version(file)}"]
+            env = [f"SOLC_VERSION={get_solc_suitable_version(task.file)}"]
 
         try:
             container = client.containers.run(image,
