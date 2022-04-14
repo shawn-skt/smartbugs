@@ -10,6 +10,7 @@ import yaml
 import tempfile
 import shutil
 
+from src.output_parser.Smartian import Smartian
 from src.output_parser.Conkas import Conkas
 from src.output_parser.HoneyBadger import HoneyBadger
 from src.output_parser.Maian import Maian
@@ -139,6 +140,9 @@ def parse_results(output, tool, file_name, container, cfg, logs, results_folder,
         elif tool == 'mythril':
             results['analysis'] = json.loads(output)
             sarif_holder.addRun(Mythril().parseSarif(results, file_path_in_repo))
+        elif tool == 'smartian':
+            results['analysis'] = Smartian().parse(output)
+            sarif_holder.addRun(Smartian().parseSarif(results['analysis'], file_path_in_repo))
         elif tool == 'securify':
             if len(output) > 0 and output[0] == '{':
                 results['analysis'] = json.loads(output)
