@@ -1,5 +1,7 @@
 # SmartBugs: A Framework to Analyze Solidity Smart Contracts
-
+____________
+**修改：增加了smartian工具，在运行前需要把/config/tools里的各个tool的run_solidity的行尾序列都改成LF（可以使用VSCode右下角修改）**
+____________
 ![Smartbugs build](https://github.com/smartbugs/smartbugs/workflows/build/badge.svg)
  <a href="https://github.com/smartbugs/smartbugs/releases">
         <img alt="Smartbugs release" src="https://img.shields.io/github/release/smartbugs/smartbugs.svg">
