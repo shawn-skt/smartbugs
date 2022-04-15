@@ -1,0 +1,8 @@
+#!/bin/sh
+
+FILENAME="$1"
+ABIFILE = "$2"
+export PATH="/data/bin:$PATH"
+# chmod +x /data/bin/solc
+
+dotnet /home/test/tools/Smartian/build/Smartian.dll fuzz -p "$FILENAME" -a "$ABIFILE" -t 60 -o /home/123

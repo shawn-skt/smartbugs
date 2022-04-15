@@ -1,0 +1,12 @@
+/data/bin/run_solidity: 4: /data/bin/run_solidity: ABIFILE: not found
+[00:00:00:00] Fuzz target : /data/x2y2.sol
+[00:00:00:00] Fuzzing starts at 10:41:00
+[00:00:00:00] Time limit : 60 s
+Unhandled exception. System.IO.IOException: The file '/dev/null' already exists.
+   at System.IO.FileSystem.CreateDirectory(String fullPath)
+   at System.IO.Directory.CreateDirectory(String path)
+   at Smartian.Utils.createDirectoryIfNotExists(String dir) in /home/test/tools/Smartian/src/Core/Utils.fs:line 134
+   at Smartian.Fuzz.run[a](String[] args) in /home/test/tools/Smartian/src/Fuzz/Fuzz.fs:line 141
+   at Smartian.Main.runMode(String mode, String[] optArgs) in /home/test/tools/Smartian/src/Main/Main.fs:line 14
+   at Smartian.Main.main(String[] args) in /home/test/tools/Smartian/src/Main/Main.fs:line 22
+Aborted (core dumped)

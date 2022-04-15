@@ -1,0 +1,72 @@
+/data/bin/run_solidity: 4: /data/bin/run_solidity: ABIFILE: not found
+[00:00:00:00] Fuzz target : /data/rnd.sol
+[00:00:00:00] Fuzzing starts at 10:53:15
+[00:00:00:00] Time limit : 60 s
+Stack lift offset not found @ 52d
+Stack lift offset not found @ 41
+Stack lift offset not found @ 5db
+Stack lift offset not found @ 15b
+Stack lift offset not found @ 57c
+Stack lift offset not found @ 167
+Stack lift offset not found @ 1244
+Stack lift offset not found @ 1216
+Stack lift offset not found @ 12d7
+Stack lift offset not found @ 172d
+Stack lift offset not found @ ff0
+Stack lift offset not found @ 1316
+Stack lift offset not found @ 175e
+Stack lift offset not found @ 912
+Stack lift offset not found @ 17a6
+Stack lift offset not found @ 91c
+Stack lift offset not found @ 926
+Stack lift offset not found @ 930
+Stack lift offset not found @ 98b
+Stack lift offset not found @ 995
+Stack lift offset not found @ 99f
+Stack lift offset not found @ 9a9
+Stack lift offset not found @ 18dc
+Stack lift offset not found @ 28d
+Stack lift offset not found @ 17da
+Stack lift offset not found @ 688
+Stack lift offset not found @ 10fb
+Stack lift offset not found @ 1150
+Stack lift offset not found @ 656
+Stack lift offset not found @ 1286
+Stack lift offset not found @ 12d
+Stack lift offset not found @ 1244
+Stack lift offset not found @ 1216
+Stack lift offset not found @ 12d7
+Stack lift offset not found @ 172d
+Stack lift offset not found @ ff0
+Stack lift offset not found @ 1316
+Stack lift offset not found @ 175e
+Stack lift offset not found @ 912
+Stack lift offset not found @ 17a6
+Stack lift offset not found @ 91c
+Stack lift offset not found @ 926
+Stack lift offset not found @ 930
+Stack lift offset not found @ 98b
+Stack lift offset not found @ 995
+Stack lift offset not found @ 99f
+Stack lift offset not found @ 9a9
+Stack lift offset not found @ 18dc
+Stack lift offset not found @ 28d
+Stack lift offset not found @ 17da
+Stack lift offset not found @ 688
+Stack lift offset not found @ 10fb
+Stack lift offset not found @ 1150
+Stack lift offset not found @ 656
+Stack lift offset not found @ 1286
+Stack lift offset not found @ 12d
+Unhandled exception. System.Exception: Failed to analyze trampoline code
+   at B2R2.MiddleEnd.Reclaimer.EVMTrampolineAnalysis.analyzeTrampoline(BinEssence ess) in /mnt/c/Workspace/Smartian/EVMAnalysis/B2R2/src/MiddleEnd/Reclaimer/EVMTrampolineAnalysis.fs:line 127
+   at B2R2.MiddleEnd.Reclaimer.EVMTrampolineAnalysis.B2R2.MiddleEnd.Reclaimer.IAnalysis.Run(BinEssence ess, AnalysisHint hint) in /mnt/c/Workspace/Smartian/EVMAnalysis/B2R2/src/MiddleEnd/Reclaimer/EVMTrampolineAnalysis.fs:line 135
+   at Microsoft.FSharp.Collections.ListModule.Fold[T,TState](FSharpFunc`2 folder, TState state, FSharpList`1 list) in F:\workspace\_work\1\s\src\fsharp\FSharp.Core\list.fs:line 222
+   at B2R2.MiddleEnd.Reclaimer.Reclaimer.run(FSharpList`1 analyses, BinEssence ess) in /mnt/c/Workspace/Smartian/EVMAnalysis/B2R2/src/MiddleEnd/Reclaimer/Reclaimer.fs:line 32
+   at EVMAnalysis.Parse.run(String binFile, String abiFile) in /home/test/tools/Smartian/EVMAnalysis/src/FrontEnd/Parse.fs:line 65
+   at EVMAnalysis.TopLevel.parseAndAnalyze(String binFile, String abiFile) in /home/test/tools/Smartian/EVMAnalysis/src/Analysis/TopLevel.fs:line 96
+   at Smartian.Fuzz.initializeWithDFA(FuzzOption opt) in /home/test/tools/Smartian/src/Fuzz/Fuzz.fs:line 21
+   at Smartian.Fuzz.run[a](String[] args) in /home/test/tools/Smartian/src/Fuzz/Fuzz.fs:line 144
+   at Smartian.Main.runMode(String mode, String[] optArgs) in /home/test/tools/Smartian/src/Main/Main.fs:line 14
+   at Smartian.Main.main(String[] args) in /home/test/tools/Smartian/src/Main/Main.fs:line 22
+Aborted (core dumped)

@@ -1,0 +1,14 @@
+{
+  "analysis": [
+    {
+      "errors": [],
+      "file": "/data/rnd.sol",
+      "name": "/data/rnd"
+    }
+  ],
+  "contract": "rnd",
+  "duration": 2.1471853256225586,
+  "end": 1650019996.258828,
+  "start": 1650019994.1116426,
+  "tool": "smartian"
+}

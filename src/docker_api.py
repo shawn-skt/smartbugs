@@ -221,16 +221,19 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
             file_path_in_repo = file
         else:
             file_path_in_repo = file.replace(import_path, '')  # file path relative to project's root directory
-
-        solc_compiler = get_solc(file)
+        #安装solc可能会很耗时(网不好)  而且有些工具不需要solc  不过暂时还不知道哪些要哪些不要  最好根据工具加个if判断 要用solc就安装 不要的就pass 
+        # solc_compiler = get_solc(file)      
 
         filename = os.path.basename(file)
         scripts  = os.path.join(TOOLS_CFG_PATH,tool)
         working_dir = tempfile.mkdtemp()
+        if(tool=="smartian"):
+            abifile = file[:-3] + "abi"
+            shutil.copy(abifile, working_dir)
         shutil.copy(file, working_dir)
         working_bin_dir = f'{working_dir}/bin'
         shutil.copytree(scripts, working_bin_dir)
-        shutil.copyfile(solc_compiler, f'{working_bin_dir}/solc')
+        # shutil.copyfile(solc_compiler, f'{working_bin_dir}/solc')
 
         # bind directory path instead of file path to allow imports in the same directory
         volume_bindings = mount_volumes(working_dir, logs)
@@ -244,12 +247,21 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
 
         container = None
         try:
-            container = client.containers.run(image,
-                                              entrypoint = f"/data/bin/run_solidity /data/{filename}",
-                                              detach=True,
-                                              user = 0,
-                                              # cpu_quota=150000,
-                                              volumes=volume_bindings)
+            if(tool!="smartian"):
+                container = client.containers.run(image,
+                                                entrypoint = f"/data/bin/run_solidity /data/{filename}",
+                                                detach=True,
+                                                user = 0,
+                                                # cpu_quota=150000,
+                                                volumes=volume_bindings)
+            elif(tool=="smartian"):
+                abi_file = filename[:-3] + "abi"
+                container = client.containers.run(image,
+                                                entrypoint = f"/data/bin/run_solidity /data/{filename} /data/{abi_file}",
+                                                detach=True,
+                                                user = 0,
+                                                # cpu_quota=150000,
+                                                volumes=volume_bindings)
             try:
                 container.wait(timeout=(30 * 60))
             except Exception as e:

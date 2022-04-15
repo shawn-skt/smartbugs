@@ -1,0 +1,14 @@
+{
+  "analysis": [
+    {
+      "errors": [],
+      "file": "/data/x2y2.sol",
+      "name": "/data/x2y2"
+    }
+  ],
+  "contract": "x2y2",
+  "duration": 1.4287223815917969,
+  "end": 1650019260.6747394,
+  "start": 1650019259.246017,
+  "tool": "smartian"
+}
