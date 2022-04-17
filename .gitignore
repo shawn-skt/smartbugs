@@ -10,6 +10,7 @@ results/securify/*
 results/smartcheck/*
 results/slither/*
 results/solhint/*
+results/smartian/*
 results/logs/*
 
 #Keep folders
