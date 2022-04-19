@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# FILENAME="$1"
+
+export PATH="/contracts/bin:$PATH"
+chmod +x /contracts/bin/solc
+
+python3 run.py

@@ -1,7 +1,11 @@
 # SmartBugs: A Framework to Analyze Solidity Smart Contracts
 ____________
-**修改：增加了smartian工具，在运行前需要把/config/tools里的各个tool的run_solidity的行尾序列都改成LF（可以使用VSCode右下角修改）**
+**修改：增加了smartian工具和sFuzz工具，在运行前需要把/config/tools里的各个tool的run_solidity的行尾序列都改成LF（可以使用VSCode右下角修改）**
+
 e.g. python3 smartBugs.py --tool smartian --file dataset/for_smartian/x2y2.sol 
+
+e.g. python3 smartBugs.py --tool sFuzz --file ../sfuzz_test/
+
 使用smartian时需要把字节码文件和abi文件都上传放在同一文件夹中
 ____________
 ![Smartbugs build](https://github.com/smartbugs/smartbugs/workflows/build/badge.svg)

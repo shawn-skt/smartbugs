@@ -22,6 +22,7 @@ from src.output_parser.Securify import Securify
 from src.output_parser.Slither import Slither
 from src.output_parser.Smartcheck import Smartcheck
 from src.output_parser.Solhint import Solhint
+from src.output_parser.sFuzz import sFuzz
 from src.config import TOOLS,TOOLS_CFG_PATH
 
 from time import time
@@ -57,6 +58,13 @@ def mount_volumes(dir_path, logs):
         print(err)
         logs.write(err + '\n')
 
+def mount_volumes_sfuzz(dir_path, logs):
+    try:
+        volume_bindings = {os.path.abspath(dir_path): {'bind': '/contracts', 'mode': 'rw'}}
+        return volume_bindings
+    except os.error as err:
+        print(err)
+        logs.write(err + '\n')
 
 """
 stop container
@@ -140,6 +148,9 @@ def parse_results(output, tool, file_name, container, cfg, logs, results_folder,
         elif tool == 'mythril':
             results['analysis'] = json.loads(output)
             sarif_holder.addRun(Mythril().parseSarif(results, file_path_in_repo))
+        elif tool == 'sFuzz':
+            results['analysis'] = sFuzz().parse(output)
+            sarif_holder.addRun(sFuzz().parseSarif(results['analysis'], file_path_in_repo))
         elif tool == 'smartian':
             results['analysis'] = Smartian().parse(output)
             sarif_holder.addRun(Smartian().parseSarif(results['analysis'], file_path_in_repo))
@@ -221,8 +232,8 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
             file_path_in_repo = file
         else:
             file_path_in_repo = file.replace(import_path, '')  # file path relative to project's root directory
-        #安装solc可能会很耗时(网不好)  而且有些工具不需要solc  不过暂时还不知道哪些要哪些不要  最好根据工具加个if判断 要用solc就安装 不要的就pass 
-        # solc_compiler = get_solc(file)      
+
+        # solc_compiler = get_solc(file)   #安装solc可能会很耗时(网不好)  而且有些工具不需要solc  不过暂时还不知道哪些要哪些不要  最好根据工具加个if判断 要用solc就安装 不要的就pass 
 
         filename = os.path.basename(file)
         scripts  = os.path.join(TOOLS_CFG_PATH,tool)
@@ -236,7 +247,10 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
         # shutil.copyfile(solc_compiler, f'{working_bin_dir}/solc')
 
         # bind directory path instead of file path to allow imports in the same directory
-        volume_bindings = mount_volumes(working_dir, logs)
+        if(tool!='sFuzz'):
+            volume_bindings = mount_volumes(working_dir, logs)
+        else:
+            volume_bindings = mount_volumes_sfuzz(working_dir, logs)
 
         start = time()
 
@@ -247,7 +261,7 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
 
         container = None
         try:
-            if(tool!="smartian"):
+            if(tool!="smartian" and tool!='sFuzz'):
                 container = client.containers.run(image,
                                                 entrypoint = f"/data/bin/run_solidity /data/{filename}",
                                                 detach=True,
@@ -262,6 +276,14 @@ def analyse_files(tool, file, logs, now, sarif_outputs, output_version, import_p
                                                 user = 0,
                                                 # cpu_quota=150000,
                                                 volumes=volume_bindings)
+            elif(tool=="sFuzz"):
+                abi_file = filename[:-3] + "abi"
+                container = client.containers.run(image,
+                                                entrypoint = f"/contracts/bin/run_solidity",
+                                                detach=True,
+                                                user = 0,
+                                                # cpu_quota=150000,
+                                                volumes=volume_bindings)       
             try:
                 container.wait(timeout=(30 * 60))
             except Exception as e:
