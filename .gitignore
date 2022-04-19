@@ -11,6 +11,7 @@ results/smartcheck/*
 results/slither/*
 results/solhint/*
 results/smartian/*
+results/sFuzz/*
 results/logs/*
 
 #Keep folders
